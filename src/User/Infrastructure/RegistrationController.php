@@ -17,14 +17,14 @@ use Symfony\Component\Routing\Attribute\Route;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, RegisterUser $registerUser, UserPasswordHasherInterface $hasher, UserRepository $userRepository, Security $security): Response
+    public function register(Request $request, RegisterUser $registerUser, UserRepository $userRepository): Response
     {
         $userDTO = new UserDTO();
         $form = $this->createForm(RegistrationFormType::class, $userDTO);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $registerUser->execute($userDTO, $userRepository, $hasher, $security);
+            return $registerUser->execute($userDTO, $userRepository);
         }
 
         return $this->render('registration/register.html.twig', [

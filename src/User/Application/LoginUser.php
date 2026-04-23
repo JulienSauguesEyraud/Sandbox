@@ -12,9 +12,18 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class LoginUser
 {
-    public function execute(UserDTO $userDTO, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository, Security $security): Response
+    private UserRepository $userRepository;
+    private Security $security;
+
+    public function __construct(UserRepository $userRepository, Security $security)
     {
-        $user = $userRepository->findUserByEmail($userDTO->email);
-        return $security->login($user, AppCustomAuthenticator::class, 'main');
+        $this->userRepository = $userRepository;
+        $this->security = $security;
+    }
+
+    public function execute(UserDTO $userDTO): Response
+    {
+        $user = $this->userRepository->findUserByEmail($userDTO->email);
+        return $this->security->login($user, AppCustomAuthenticator::class, 'main');
     }
 }

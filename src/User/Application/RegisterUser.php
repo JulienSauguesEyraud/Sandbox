@@ -12,16 +12,26 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegisterUser
 {
-    public function execute(UserDTO $userDTO, UserRepository $userRepository, UserPasswordHasherInterface $hasher,Security $security): Response
+    private UserRepository $userRepository;
+    private UserPasswordHasherInterface $hasher;
+    private Security $security;
+
+    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $hasher, Security $security)
     {
-        $password = $hasher->hashPassword(
+        $this->userRepository = $userRepository;
+        $this->hasher = $hasher;
+        $this->security = $security;
+    }
+    public function execute(UserDTO $userDTO): Response
+    {
+        $password = $this->hasher->hashPassword(
             User::createUser($userDTO->email, ''),
             $userDTO->password
         );
 
         $user = User::createUser($userDTO->email, $password);
-        $userRepository->saveUser($user);
+        $this->userRepository->saveUser($user);
 
-        return $security->login($user, AppCustomAuthenticator::class, 'main');
+        return $this->security->login($user, AppCustomAuthenticator::class, 'main');
     }
 }

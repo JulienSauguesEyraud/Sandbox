@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     #[Route(path: '/login', name: 'app_login')]
-    public function login(Request $request, AuthenticationUtils $authenticationUtils, LoginUser $loginUser, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository, Security $security): Response
+    public function login(Request $request, AuthenticationUtils $authenticationUtils, LoginUser $loginUser): Response
     {
         if ($request->isMethod('POST')) {
 
@@ -25,7 +25,7 @@ class SecurityController extends AbstractController
                 $request->request->get('email'),
                 $request->request->get('password')
                 );
-            return $loginUser->execute($userDTO, $userPasswordHasher, $userRepository, $security);
+            return $loginUser->execute($userDTO);
         }
 
         // get the login error if there is one
