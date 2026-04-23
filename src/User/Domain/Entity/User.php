@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\User\Domain\Entity;
 
 use App\User\Domain\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,28 +34,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
+    private function __construct(string $email, string $password)
     {
         $this->email = $email;
-
-        return $this;
+        $this->password = $password;
+        $this->roles = ['ROLE_USER'];
+    }
+    public static function createUser(string $email, string $password): User
+    {
+        return new User($email, $password);
+    }
+    public function resetPassword(string $password): void
+    {
+        $this->password = $password;
     }
 
     /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
+     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
      */
+    public function __serialize(): array
+    {
+        $data = (array) $this;
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+
+        return $data;
+    }
+
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
@@ -73,39 +77,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function getEmail(): ?string
     {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
-    public function __serialize(): array
-    {
-        $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
-
-        return $data;
-    }
-}
+        return $this->email;
+    }}

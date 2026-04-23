@@ -2,10 +2,10 @@
 
 namespace App\User\Infrastructure;
 
-use App\Entity\User;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\User\Application\ResetPassword;
+use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;

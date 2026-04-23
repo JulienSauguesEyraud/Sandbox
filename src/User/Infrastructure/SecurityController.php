@@ -2,6 +2,7 @@
 
 namespace App\User\Infrastructure;
 
+use App\User\Application\DTO\UserDTO;
 use App\User\Application\LoginUser;
 use App\User\Domain\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -20,9 +21,11 @@ class SecurityController extends AbstractController
     {
         if ($request->isMethod('POST')) {
 
-            $email = $request->request->get('email');
-            $password = $request->request->get('password');
-            return $loginUser->execute($email, $password, $userPasswordHasher, $userRepository, $security);
+            $userDTO = new UserDTO(
+                $request->request->get('email'),
+                $request->request->get('password')
+                );
+            return $loginUser->execute($userDTO, $userPasswordHasher, $userRepository, $security);
         }
 
         // get the login error if there is one
