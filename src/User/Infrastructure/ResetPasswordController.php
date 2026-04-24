@@ -2,22 +2,19 @@
 
 namespace App\User\Infrastructure;
 
-use App\Form\ChangePasswordFormType;
-use App\Form\ResetPasswordRequestFormType;
-use App\User\Application\DTO\EmailDTO;
 use App\User\Application\RequestResetPassword;
 use App\User\Application\ResetPassword;
 use App\User\Domain\Entity\User;
+use App\User\Domain\Input\RequestResetPasswordDTO;
+use App\User\Domain\Input\ResetPasswordDTO;
 use App\User\Domain\Repository\UserRepository;
+use App\User\Infrastructure\Form\ChangePasswordFormType;
+use App\User\Infrastructure\Form\ResetPasswordRequestFormType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -40,13 +37,13 @@ class ResetPasswordController extends AbstractController
      * Display & process form to request a password reset.
      */
     #[Route('', name: 'app_forgot_password_request')]
-    public function request(Request $request, MailerInterface $mailer, TranslatorInterface $translator, RequestResetPassword $requestResetPassword): Response
+    public function request(Request $request,  RequestResetPassword $requestResetPassword): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $email = new EmailDTO($form->get('email')->getData());
+            $email = new RequestResetPasswordDTO($form->get('email')->getData());
 
             $requestResetPassword->execute($email);
 
@@ -119,8 +116,12 @@ class ResetPasswordController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
-            $resetPassword->execute($user, $plainPassword);
+            $resetPasswordDTO = new ResetPasswordDTO(
+                $plainPassword,
+                $token
+            );
 
+            $resetPassword->execute($resetPasswordDTO, $user);
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
 

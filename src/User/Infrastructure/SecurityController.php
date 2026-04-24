@@ -2,15 +2,13 @@
 
 namespace App\User\Infrastructure;
 
-use App\User\Application\DTO\UserDTO;
 use App\User\Application\LoginUser;
-use App\User\Domain\Repository\UserRepository;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
+use App\User\Application\RegisterUser;
+use App\User\Domain\Input\LoginUserDTO;
+use App\User\Domain\Input\RegisterUserDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -21,7 +19,7 @@ class SecurityController extends AbstractController
     {
         if ($request->isMethod('POST')) {
 
-            $userDTO = new UserDTO(
+            $userDTO = new LoginUserDTO(
                 $request->request->get('email'),
                 $request->request->get('password')
                 );

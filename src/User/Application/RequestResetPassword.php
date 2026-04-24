@@ -2,33 +2,27 @@
 
 namespace App\User\Application;
 
-use App\User\Application\DTO\EmailDTO;
-use App\User\Domain\Entity\User;
+use App\User\Domain\Input\RequestResetPasswordDTO;
 use App\User\Domain\Repository\UserRepository;
-use App\User\Infrastructure\AppCustomAuthenticator;
-use PharIo\Manifest\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelper;
+use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
 class RequestResetPassword
 {
     private UserRepository $userRepository;
-    private Mailer $mailer;
-    private ResetPasswordHelper $resetPasswordHelper;
+    private MailerInterface $mailer;
+    private ResetPasswordHelperInterface $resetPasswordHelper;
 
-    public function __construct($userRepository, Mailer $mailer, ResetPasswordHelper $resetPasswordHelper)
+    public function __construct(UserRepository $userRepository, MailerInterface $mailer, ResetPasswordHelperInterface $resetPasswordHelper)
     {
         $this->userRepository = $userRepository;
         $this->mailer = $mailer;
         $this->resetPasswordHelper = $resetPasswordHelper;
     }
 
-    public function execute(EmailDTO $dto): void
+    public function execute(RequestResetPasswordDTO $dto): void
     {
         $user = $this->userRepository->findUserByEmail($dto->email);
 
@@ -38,7 +32,7 @@ class RequestResetPassword
 
         $resetToken = $this->resetPasswordHelper->generateResetToken($user);
 
-        $email = (new TemplatedEmail())
+        $email = new TemplatedEmail()
             ->from(new Address('mailer@test.com'))
             ->to($user->getEmail())
             ->subject('Reset password')
