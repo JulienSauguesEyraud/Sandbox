@@ -1,0 +1,17 @@
+{# templates/home/show.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ topic.name }}</h1>
+
+    <h2>Commentaires</h2>
+
+    {% for comment in comments %}
+        <div>
+            <a href="{{ path('comment_show', {id: comment.id}) }}">
+                {{ comment.description }}
+            </a>
+        </div>
+    {% endfor %}
+{% endblock %}
