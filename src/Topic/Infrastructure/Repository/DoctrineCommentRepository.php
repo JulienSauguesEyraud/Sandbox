@@ -28,14 +28,4 @@ class DoctrineCommentRepository extends ServiceEntityRepository implements Comme
             ->getQuery()
             ->getResult();
     }
-
-    public function findChildren(Comment $comment): array
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.parent = :parent')
-            ->setParameter('parent', $comment)
-            ->getQuery()
-            ->getResult();
-    }
-
 }

@@ -22,6 +22,4 @@ interface CommentRepository
     public function findOneBy(array $criteria, array|null $orderBy = null): object|null;
 
     public function findRootByTopic(Topic $topic): array;
-
-    public function findChildren(Comment $comment): array;
 }
