@@ -2,6 +2,7 @@
 
 namespace App\User\Domain\Repository;
 
+use App\Topic\Domain\Entity\Topic;
 use App\User\Domain\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -12,55 +13,18 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 /**
  * @extends ServiceEntityRepository<User>
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+interface UserRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, User::class);
-    }
+    /** @return User|null */
+    public function find(mixed $id): object|null;
 
-    /**
-     * Used to upgrade (rehash) the user's password automatically over time.
-     */
-    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
-    {
-        if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
-        }
+    /** @return User[] */
+    public function findBy(array $criteria, array|null $orderBy = null, int|null $limit = null, int|null $offset = null): array;
 
-        $user->resetPassword($newHashedPassword);
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
-    }
+    /** @return User|null */
+    public function findOneBy(array $criteria, array|null $orderBy = null): object|null;
 
-    public function saveUser(User $user): User
-    {
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
-        return $user;
-    }
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void;
 
-    public function findUserByEmail(string $email): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->where('u.email = :email')
-            ->setParameter('email', $email)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function saveUser(User $user): User;
 }

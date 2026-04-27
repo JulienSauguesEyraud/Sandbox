@@ -1,9 +1,7 @@
-{# templates/home/show.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>{{ topic.name }}</h1>
+    <h1>{{ topic.title }}</h1>
 
     <h2>Commentaires</h2>
 
@@ -14,4 +12,6 @@
             </a>
         </div>
     {% endfor %}
+
+    <a href="{{ path('app_root') }}">Accueil</a>
 {% endblock %}

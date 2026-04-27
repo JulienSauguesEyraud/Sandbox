@@ -30,11 +30,37 @@ class TopicController extends AbstractController
     #[Route('/topic/comment/{id}', name: 'comment_show')]
     public function showComment(Comment $comment, CommentRepository $repo): Response
     {
-        $children = $repo->findChildren($comment);
+        if($comment->getParent()){
+            throw $this->createNotFoundException('This comment is not a root comment.');
+        }
+
+        $topic = $comment->getTopic();
+
+        $all = $repo->findBy(['topic' => $topic]);
+
+        $indexed = [];
+
+        foreach ($all as $c) {
+            $indexed[$c->getId()] = [
+                'comment' => $c,
+                'children' => []
+            ];
+        }
+
+        foreach ($indexed as $_ => &$node) {
+            $parent = $node['comment']->getParent();
+
+            if ($parent) {
+                $indexed[$parent->getId()]['children'][] = &$node;
+            }
+        }
+
+        $tree = $indexed[$comment->getId()];
 
         return $this->render('topic/showComment.html.twig', [
             'comment' => $comment,
-            'children' => $children,
+            'tree' => $tree,
+            'topic' => $topic,
         ]);
     }
 }

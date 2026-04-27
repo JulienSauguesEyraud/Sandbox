@@ -26,10 +26,10 @@ class TopicFixture extends ArrayFixture implements ORMFixtureInterface
 
     public function getObjects(): iterable
     {
-        yield ['name' => 't0'];
-        yield ['name' => 't1'];
-        yield ['name' => 't2'];
-        yield ['name' => 't3'];
-        yield ['name' => 't4'];
+        yield ['name' => 't0', 'title' => 'Lorem ipsum dolor sit amet'];
+        yield ['name' => 't1', 'title' => 'Consectetur adipiscing elit'];
+        yield ['name' => 't2', 'title' => 'Fusce quis sodales nibh'];
+        yield ['name' => 't3', 'title' => 'Pellentesque dapibus massa cursus'];
+        yield ['name' => 't4', 'title' => 'Sed ut perspiciatis'];
     }
 }

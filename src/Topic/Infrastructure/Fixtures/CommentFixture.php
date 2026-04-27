@@ -38,6 +38,11 @@ class CommentFixture extends ArrayFixture implements DependentFixtureInterface, 
             'Fusce quis sodales nibh',
             'Pellentesque dapibus massa cursus',
             'Sed ut perspiciatis',
+            'Etiam sodales sed felis a aliquet',
+            'In hac habitasse platea dictumst',
+            'Sed ut perspiciatis',
+            'Sed vitae lobortis leo',
+            'Sed accumsan purus quis sem venenatis'
         ];
 
         $refs = [];
@@ -55,13 +60,13 @@ class CommentFixture extends ArrayFixture implements DependentFixtureInterface, 
             ];
         }
 
-        for ($i = 6; $i <= 50; $i++) {
+        for ($i = 6; $i <= 500; $i++) {
 
             $ref = "comment_c_child_$i";
 
             $parent = null;
 
-            if (random_int(0, 4) !== 0 && !empty($refs)) {
+            if (random_int(0, 20) !== 0 && !empty($refs)) {
                 $parent = $this->getReference(
                     $refs[array_rand($refs)],
                     Comment::class

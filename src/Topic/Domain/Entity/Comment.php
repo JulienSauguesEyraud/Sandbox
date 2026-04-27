@@ -3,9 +3,10 @@
 namespace App\Topic\Domain\Entity;
 
 use App\Topic\Domain\Repository\CommentRepository;
+use App\Topic\Infrastructure\Repository\DoctrineCommentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CommentRepository::class)]
+#[ORM\Entity(repositoryClass: DoctrineCommentRepository::class)]
 class Comment
 {
     #[ORM\Id]

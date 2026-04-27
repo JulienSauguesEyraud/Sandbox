@@ -24,7 +24,7 @@ class RequestResetPassword
 
     public function execute(RequestResetPasswordDTO $dto): void
     {
-        $user = $this->userRepository->findUserByEmail($dto->email);
+        $user = $this->userRepository->findOneBy(['email' => $dto->email]);
 
         if (!$user) {
             return;

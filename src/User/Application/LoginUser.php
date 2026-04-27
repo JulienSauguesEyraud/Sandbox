@@ -22,7 +22,7 @@ class LoginUser
 
     public function execute(LoginUserDTO $userDTO): Response
     {
-        $user = $this->userRepository->findUserByEmail($userDTO->email);
+        $user = $this->userRepository->findOneBy(['email' => $userDTO->email]);
         return $this->security->login($user, AppCustomAuthenticator::class, 'main');
     }
 }

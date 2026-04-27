@@ -18,6 +18,9 @@ class Topic
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'topic', orphanRemoval: true)]
     private Collection $comments;
 
@@ -29,6 +32,11 @@ class Topic
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
     }
 
     public function getId(): ?int

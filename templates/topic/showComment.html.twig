@@ -1,19 +1,13 @@
-{# templates/home/show.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>{{ comment.description }}</h1>
 
-    <h3>Réponses</h3>
+    {% include 'topic/_comment_tree.html.twig' with {
+        node: tree,
+        depth: 0
+    } %}
 
-    {% for child in children %}
-        <div style="margin-left: 20px;">
-            <a href="{{ path('comment_show', {id: child.id}) }}">
-                {{ child.description }}
-            </a>
-        </div>
-    {% else %}
-        <p>Aucune réponse</p>
-    {% endfor %}
+    <a href="{{ path('topic_show', {'id': topic.id }) }}">Retour</a>
+    <a href="{{ path('app_root') }}">Accueil</a>
+
 {% endblock %}
