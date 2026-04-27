@@ -2,12 +2,12 @@
 
 namespace App\Topic\Domain\Entity;
 
-use App\Topic\Domain\Repository\TopicRepository;
+use App\Topic\Infrastructure\Repository\DoctrineTopicRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TopicRepository::class)]
+#[ORM\Entity(repositoryClass: DoctrineTopicRepository::class)]
 class Topic
 {
     #[ORM\Id]
