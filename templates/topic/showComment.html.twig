@@ -2,6 +2,7 @@
 
 {% block body %}
 
+    <h1>Sujet : {{ topic.title }}</h1>
     <p>{{ comment.description }}</p>
 
     {% for child in comment.children %}

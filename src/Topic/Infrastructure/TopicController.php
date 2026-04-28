@@ -2,15 +2,10 @@
 
 namespace App\Topic\Infrastructure;
 
-use App\Topic\Domain\Entity\Comment;
 use App\Topic\Domain\Entity\Topic;
 use App\Topic\Domain\Repository\CommentRepository;
-use App\User\Application\RegisterUser;
-use App\User\Domain\Input\RegisterUserDTO;
-use App\User\Domain\Repository\UserRepository;
-use App\User\Infrastructure\Form\RegistrationFormType;
+use App\Topic\Domain\Repository\TopicRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -27,14 +22,15 @@ class TopicController extends AbstractController
         ]);
     }
 
-    #[Route('/topic/comment/{id}', name: 'comment_show')]
-    public function showComment(Comment $comment): Response
+    #[Route('/topic/{topicId}/comment/{commentId}', name: 'comment_show')]
+    public function showComment(CommentRepository $commentRepository, TopicRepository $topicRepository, int $commentId, int $topicId): Response
     {
+        $comment = $commentRepository->find($commentId);
+        $topic = $topicRepository->find($topicId);
+
         if ($comment->getParent()) {
             throw $this->createNotFoundException();
         }
-
-        $topic = $comment->getTopic();
 
         return $this->render('topic/showComment.html.twig', [
             'comment' => $comment,

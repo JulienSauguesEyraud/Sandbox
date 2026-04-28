@@ -1,14 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>{{ topic.title }}</h1>
+    <h1>Sujet : {{ topic.title }}</h1>
 
     <h2>Commentaires</h2>
 
     {% for comment in comments %}
         <div>
-            <a href="{{ path('comment_show', {id: comment.id}) }}">
-                {{ comment.description }}
+            <p>{{ comment.description }}</p>
+            <a href="{{ path('comment_show', {'topicId': topic.id, 'commentId': comment.id}) }}">
+                Voir les réponses
             </a>
         </div>
     {% endfor %}

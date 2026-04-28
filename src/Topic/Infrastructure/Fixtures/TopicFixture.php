@@ -4,7 +4,6 @@ namespace App\Topic\Infrastructure\Fixtures;
 
 use App\Topic\Domain\Entity\Topic;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
-use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
 use Orbitale\Component\ArrayFixture\ArrayFixture;

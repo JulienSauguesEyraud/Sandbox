@@ -2,7 +2,6 @@
 
 namespace App\Topic\Domain\Entity;
 
-use App\Topic\Domain\Repository\CommentRepository;
 use App\Topic\Infrastructure\Repository\DoctrineCommentRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

@@ -3,9 +3,7 @@
 namespace App\Topic\Domain\Repository;
 
 use App\Topic\Domain\Entity\Comment;
-use App\Topic\Domain\Entity\Topic;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Comment>
