@@ -5,14 +5,16 @@
 
     <h2>Commentaires</h2>
 
+    <ul>
     {% for comment in comments %}
-        <div>
+        <li>
             <p>{{ comment.description }}</p>
             <a href="{{ path('comment_show', {'topicId': topic.id, 'commentId': comment.id}) }}">
                 Voir les réponses
             </a>
-        </div>
+        </li>
     {% endfor %}
+    </ul>
 
     <a href="{{ path('app_root') }}">Accueil</a>
 {% endblock %}
