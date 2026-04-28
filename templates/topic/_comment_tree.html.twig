@@ -1,11 +1,40 @@
-<div style="margin-left: {{ depth * 10 }}px;">
-
-    <p>{{ comment.description }}</p>
-
-    {% for child in comment.children %}
-        {% include 'topic/_comment_tree.html.twig' with {
-            comment: child,
-            depth: depth + 1
-        } %}
-    {% endfor %}
+<div style="margin: 0; line-height: 1.5; display: flex;">
+    <span>{{ prefix }}</span>
+    <span>
+        {% if comment.description|length > 80 %}
+            <span class="comment-short">
+                {{ comment.description|slice(0, 80) }}
+                <span onclick="toggleComment(this)" style="cursor:pointer; color:blue;">
+                    ... [voir plus]
+                </span>
+            </span>
+            <span class="comment-full" style="display:none;">
+                {{ comment.description }}
+                <span onclick="toggleComment(this)" style="cursor:pointer; color:blue;">
+                    [voir moins]
+                </span>
+            </span>
+        {% else %}
+            {{ comment.description }}
+        {% endif %}
+    </span>
 </div>
+
+{% for child in comment.children %}
+    {% set isLast = loop.last %}
+    {% include 'topic/_comment_tree.html.twig' with {
+        comment: child,
+        prefix: indent ~ (isLast ? '└── ' : '├── '),
+        indent: indent ~ (isLast ? '    ' : '│   ')
+    } %}
+{% endfor %}
+
+<script>
+    function toggleComment(e) {
+        const wrapper = e.closest('span[class]').parentElement;
+        const short = wrapper.querySelector('.comment-short');
+        const full = wrapper.querySelector('.comment-full');
+        short.style.display = short.style.display === 'none' ? 'inline' : 'none';
+        full.style.display = full.style.display === 'none' ? 'inline' : 'none';
+    }
+</script>
