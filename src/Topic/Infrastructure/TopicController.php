@@ -19,7 +19,7 @@ class TopicController extends AbstractController
     #[Route('/topic/{id}', name: 'topic_show')]
     public function showTopic(Topic $topic, CommentRepository $commentRepo): Response
     {
-        $comments = $commentRepo->findRootByTopic($topic);
+        $comments = $commentRepo->findRootByTopic($topic->getId());
 
         return $this->render('topic/show.html.twig', [
             'topic' => $topic,
@@ -28,39 +28,17 @@ class TopicController extends AbstractController
     }
 
     #[Route('/topic/comment/{id}', name: 'comment_show')]
-    public function showComment(Comment $comment, CommentRepository $repo): Response
+    public function showComment(Comment $comment): Response
     {
-        if($comment->getParent()){
-            throw $this->createNotFoundException('This comment is not a root comment.');
+        if ($comment->getParent()) {
+            throw $this->createNotFoundException();
         }
 
         $topic = $comment->getTopic();
 
-        $all = $repo->findBy(['topic' => $topic]);
-
-        $indexed = [];
-
-        foreach ($all as $c) {
-            $indexed[$c->getId()] = [
-                'comment' => $c,
-                'children' => []
-            ];
-        }
-
-        foreach ($indexed as $_ => &$node) {
-            $parent = $node['comment']->getParent();
-
-            if ($parent) {
-                $indexed[$parent->getId()]['children'][] = &$node;
-            }
-        }
-
-        $tree = $indexed[$comment->getId()];
-
         return $this->render('topic/showComment.html.twig', [
             'comment' => $comment,
-            'tree' => $tree,
-            'topic' => $topic,
+            'topic' => $topic
         ]);
     }
 }

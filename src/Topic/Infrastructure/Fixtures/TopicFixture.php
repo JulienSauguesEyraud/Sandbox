@@ -5,10 +5,17 @@ namespace App\Topic\Infrastructure\Fixtures;
 use App\Topic\Domain\Entity\Topic;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
+use Faker\Generator;
 use Orbitale\Component\ArrayFixture\ArrayFixture;
 
 class TopicFixture extends ArrayFixture implements ORMFixtureInterface
 {
+    private Generator $faker;
+    public function __construct()
+    {
+        $this->faker = Factory::create('en_US');
+    }
     public function getEntityClass(): string
     {
         return Topic::class;
@@ -19,17 +26,12 @@ class TopicFixture extends ArrayFixture implements ORMFixtureInterface
         return 'topic_';
     }
 
-    public function getMethodNameForReference(): string
-    {
-        return 'getName';
-    }
-
     public function getObjects(): iterable
     {
-        yield ['name' => 't0', 'title' => 'Lorem ipsum dolor sit amet'];
-        yield ['name' => 't1', 'title' => 'Consectetur adipiscing elit'];
-        yield ['name' => 't2', 'title' => 'Fusce quis sodales nibh'];
-        yield ['name' => 't3', 'title' => 'Pellentesque dapibus massa cursus'];
-        yield ['name' => 't4', 'title' => 'Sed ut perspiciatis'];
+        yield ['id' => 1, 'title' => $this->faker->bs()];
+        yield ['id' => 2, 'title' => $this->faker->bs()];
+        yield ['id' => 3, 'title' => $this->faker->bs()];
+        yield ['id' => 4, 'title' => $this->faker->bs()];
+        yield ['id' => 5, 'title' => $this->faker->bs()];
     }
 }

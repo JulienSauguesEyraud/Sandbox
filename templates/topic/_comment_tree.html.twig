@@ -1,12 +1,11 @@
 <div style="margin-left: {{ depth * 10 }}px;">
 
-    <p>{{ node.comment.description }}</p>
+    <p>{{ comment.description }}</p>
 
-    {% for child in node.children %}
+    {% for child in comment.children %}
         {% include 'topic/_comment_tree.html.twig' with {
-            node: child,
+            comment: child,
             depth: depth + 1
         } %}
     {% endfor %}
-
 </div>

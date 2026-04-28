@@ -16,9 +16,6 @@ class Topic
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column(length: 255)]
     private ?string $title = null;
 
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'topic', orphanRemoval: true)]
@@ -27,11 +24,6 @@ class Topic
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
     }
 
     public function getTitle(): ?string

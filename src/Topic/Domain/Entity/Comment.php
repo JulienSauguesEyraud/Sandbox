@@ -4,6 +4,7 @@ namespace App\Topic\Domain\Entity;
 
 use App\Topic\Domain\Repository\CommentRepository;
 use App\Topic\Infrastructure\Repository\DoctrineCommentRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DoctrineCommentRepository::class)]
@@ -14,14 +15,14 @@ class Comment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'text')]
     private ?string $description = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
 
     #[ORM\ManyToOne]
     private ?comment $parent = null;
+
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'parent')]
+    private Collection $children;
 
     #[ORM\ManyToOne(targetEntity: Topic::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
@@ -37,11 +38,6 @@ class Comment
         return $this->topic;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -50,5 +46,10 @@ class Comment
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function getChildren(): Collection
+    {
+        return $this->children;
     }
 }

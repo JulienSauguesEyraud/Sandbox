@@ -5,11 +5,18 @@ namespace App\Topic\Infrastructure\Fixtures;
 use App\Topic\Domain\Entity\Comment;
 use App\Topic\Domain\Entity\Topic;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
+use Faker\Factory;
+use Faker\Generator;
 use Orbitale\Component\ArrayFixture\ArrayFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class CommentFixture extends ArrayFixture implements DependentFixtureInterface, ORMFixtureInterface
 {
+    private Generator $faker;
+    public function __construct()
+    {
+        $this->faker = Factory::create('fr_FR');
+    }
     public function getEntityClass(): string
     {
         return Comment::class;
@@ -25,44 +32,26 @@ class CommentFixture extends ArrayFixture implements DependentFixtureInterface, 
         return 'comment_';
     }
 
-    public function getMethodNameForReference(): string
-    {
-        return 'getName';
-    }
-
     public function getObjects(): iterable
     {
-        $texts = [
-            'Lorem ipsum dolor sit amet',
-            'Consectetur adipiscing elit',
-            'Fusce quis sodales nibh',
-            'Pellentesque dapibus massa cursus',
-            'Sed ut perspiciatis',
-            'Etiam sodales sed felis a aliquet',
-            'In hac habitasse platea dictumst',
-            'Sed ut perspiciatis',
-            'Sed vitae lobortis leo',
-            'Sed accumsan purus quis sem venenatis'
-        ];
-
         $refs = [];
 
         for ($i = 1; $i <= 5; $i++) {
 
-            $ref = "comment_c_$i";
+            $ref = "comment_$i";
             $refs[] = $ref;
 
             yield [
-                'name' => 'c_'. $i,
-                'description' => $texts[$i - 1],
-                'topic' => $this->getReference('topic_t' . ($i - 1), Topic::class),
+                'id' => $i,
+                'description' => $this->faker->realTextBetween(100, 3000),
+                'topic' => $this->getReference('topic_' . $i, Topic::class),
                 'parent' => null,
             ];
         }
 
         for ($i = 6; $i <= 500; $i++) {
 
-            $ref = "comment_c_child_$i";
+            $ref = "comment_$i";
 
             $parent = null;
 
@@ -74,8 +63,8 @@ class CommentFixture extends ArrayFixture implements DependentFixtureInterface, 
             }
 
             yield [
-                'name' => 'c_child_' . $i,
-                'description' => $texts[random_int(0, count($texts) - 1)],
+                'id' => $i,
+                'description' => $this->faker->realTextBetween(100, 3000),
 
                 'parent' => $parent,
 
@@ -83,7 +72,7 @@ class CommentFixture extends ArrayFixture implements DependentFixtureInterface, 
                     ? function (Comment $comment) {
                         return $comment->getParent()->getTopic();
                     }
-                    : $this->getReference('topic_t' . random_int(0, 4), Topic::class),
+                    : $this->getReference('topic_' . random_int(1, 5), Topic::class),
             ];
 
             $refs[] = $ref;

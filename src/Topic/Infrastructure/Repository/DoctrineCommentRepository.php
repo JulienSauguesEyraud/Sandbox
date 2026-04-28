@@ -19,12 +19,12 @@ class DoctrineCommentRepository extends ServiceEntityRepository implements Comme
         parent::__construct($registry, Comment::class);
     }
 
-    public function findRootByTopic(Topic $topic): array
+    public function findRootByTopic(int|string $topicId): array
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.topic = :topic')
+            ->andWhere('c.topic = :topicId')
             ->andWhere('c.parent IS NULL')
-            ->setParameter('topic', $topic)
+            ->setParameter('topicId', $topicId)
             ->getQuery()
             ->getResult();
     }
