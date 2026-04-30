@@ -1,33 +1,28 @@
-<div style="margin: 0; line-height: 1.5; display: flex;">
-    <span>{{ prefix }}</span>
-    <span>
-        {% if comment.description|length > 80 %}
-            <span class="comment-short">
-                {{ comment.description|slice(0, 80) }}
-                <span onclick="toggleComment(this)" style="cursor:pointer; color:blue;">
-                    ... [voir plus]
-                </span>
+<span style="display:block; margin-left: 35px; border-left: 1px solid black;">
+    ----
+    {% if comment.description|length > 80 %}
+        <span class="comment-short">
+            {{ comment.description|slice(0, 80) }}
+            <span onclick="toggleComment(this)" style="cursor:pointer; color:blue;">
+                ... [voir plus]
             </span>
-            <span class="comment-full" style="display:none;">
-                {{ comment.description }}
-                <span onclick="toggleComment(this)" style="cursor:pointer; color:blue;">
-                    [voir moins]
-                </span>
-            </span>
-        {% else %}
+        </span>
+        <span class="comment-full" style="display:none;">
             {{ comment.description }}
-        {% endif %}
-    </span>
-</div>
-
-{% for child in comment.children %}
-    {% set isLast = loop.last %}
-    {% include 'topic/_comment_tree.html.twig' with {
-        comment: child,
-        prefix: indent ~ (isLast ? '└── ' : '├── '),
-        indent: indent ~ (isLast ? '    ' : '│   ')
-    } %}
-{% endfor %}
+            <span onclick="toggleComment(this)" style="cursor:pointer; color:blue;">
+                [voir moins]
+            </span>
+        </span>
+    {% else %}
+        {{ comment.description }}
+    {% endif %}
+    <br>
+    {% for child in comment.children %}
+        {% include 'topic/_comment_tree.html.twig' with {
+            comment: child,
+        } %}
+    {% endfor %}
+</span>
 
 <script>
     function toggleComment(e) {

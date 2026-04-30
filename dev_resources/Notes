@@ -1,2 +1,3 @@
-ajouter les user aux commentaires(/sujets?)
-ajouter les CRUD de commentaires/sujets
+faire en sorte d'avoir les topics et com en json avec api-plateforme
+faire ce qu'il faut pour avoir un arbre avec api-plateforme
+tout en lecture seule

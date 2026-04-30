@@ -18,7 +18,7 @@ class Comment
     private ?string $description = null;
 
     #[ORM\ManyToOne]
-    private ?comment $parent = null;
+    private ?Comment $parent = null;
 
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'parent')]
     private Collection $children;

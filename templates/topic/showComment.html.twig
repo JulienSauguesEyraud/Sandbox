@@ -6,11 +6,8 @@
     <p>{{ comment.description }}</p>
 
     {% for child in comment.children %}
-        {% set isLast = loop.last %}
         {% include 'topic/_comment_tree.html.twig' with {
             comment: child,
-            prefix: isLast ? '└── ' : '├── ',
-            indent: isLast ? '    ' : '│   '
         } %}
     {% endfor %}
 
