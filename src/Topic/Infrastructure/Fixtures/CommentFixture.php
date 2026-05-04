@@ -32,21 +32,17 @@ class CommentFixture extends ArrayFixture implements DependentFixtureInterface, 
         return 'comment_';
     }
 
-    protected function flushEveryXIterations(): int
-    {
-        return 1;
-    }
-
     public function getObjects(): iterable
     {
+        $ids = null;
         for ($i = 1; $i <= 5; $i++) {
-
             yield [
                 'id' => $i,
                 'description' => $this->faker->realTextBetween(100, 3000),
                 'topic' => $this->getReference('topic_' . $i, Topic::class),
                 'parent' => null,
             ];
+            $ids[] = 'comment_' . $i;
         }
 
         for ($i = 6; $i <= 1000; $i++) {
@@ -55,7 +51,7 @@ class CommentFixture extends ArrayFixture implements DependentFixtureInterface, 
 
             if (random_int(0, 20) !== 0) {
                 $parent = $this->getReference(
-                    'comment_' . random_int(1, $i - 1),
+                    $ids[array_rand($ids)],
                     Comment::class
                 );
             }
@@ -72,6 +68,8 @@ class CommentFixture extends ArrayFixture implements DependentFixtureInterface, 
                     }
                     : $this->getReference('topic_' . random_int(1, 5), Topic::class),
             ];
+
+            $ids[] = 'comment_' . $i;
         }
     }
 }

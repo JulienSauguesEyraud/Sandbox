@@ -1,16 +1,65 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <style>
+        .comment-block {
+            display: block;
+            margin-left: 25px;
+            border-left: 1px solid black;
+        }
+
+        .comment-block::before {
+            position: absolute;
+            content: ' ';
+            border-bottom: black solid 1px;
+            width: 20px;
+            height: 0.5rem;
+        }
+
+        .comment-block:last-of-type {
+            border-left: none;
+        }
+
+        .comment-block:last-of-type::before {
+            content: ' ';
+            border-left: black solid 1px;
+            height: 0.5rem;
+        }
+
+        .comment-block-root:last-of-type {
+            border-left: none;
+        }
+
+        .comment-block-root:last-of-type::before {
+            content: ' ';
+            border-left: black solid 1px;
+            height: 0.5rem;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function toggleComment(e) {
+            const wrapper = e.closest('div[class]').parentElement;
+            const short = wrapper.querySelector('.comment-short');
+            const full = wrapper.querySelector('.comment-full');
+            short.style.display = short.style.display === 'none' ? 'inline-block' : 'none';
+            full.style.display = full.style.display === 'none' ? 'inline-block' : 'none';
+        }
+    </script>
+{% endblock %}
 {% block body %}
 
     <h1>Sujet : {{ topic.title }}</h1>
     <p>{{ comment.description }}</p>
-
-    {% for child in comment.children %}
-        {% include 'topic/_comment_tree.html.twig' with {
-            comment: child,
-        } %}
-    {% endfor %}
-
+    <div class="comment-block-root">
+        {% for child in comment.children %}
+            {% include 'topic/_comment_tree.html.twig' with {
+                comment: child,
+            } %}
+        {% endfor %}
+    </div>
     <a href="{{ path('topic_show', {'id': topic.id }) }}">Retour</a>
     <a href="{{ path('app_root') }}">Accueil</a>
 
