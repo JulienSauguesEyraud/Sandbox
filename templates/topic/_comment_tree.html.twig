@@ -15,9 +15,19 @@
     {% else %}
         {{ comment.description }}
     {% endif %}
-    {% for child in comment.children %}
-        {% include 'topic/_comment_tree.html.twig' with {
-            comment: child,
-        } %}
-    {% endfor %}
+
+    {% if depth == 2 and comment.children|length > 0 %}
+        <span onclick="showMoreComments(this, {{ comment.id }})" style="cursor:pointer; color:blue; padding-left: 22px;">
+            [voir plus de réponses]
+        </span>
+    {% endif %}
+
+    {% if depth < 2 %}
+        {% for child in comment.children %}
+            {% include 'topic/_comment_tree.html.twig' with {
+                comment: child,
+                depth: depth + 1
+            } %}
+        {% endfor %}
+    {% endif %}
 </div>

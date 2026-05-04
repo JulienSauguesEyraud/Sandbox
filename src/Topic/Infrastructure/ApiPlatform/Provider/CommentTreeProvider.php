@@ -35,7 +35,9 @@ class CommentTreeProvider implements ProviderInterface
         foreach ($comment->getChildren() as $child) {
             $children[] = $this->createTree($child);
         }
-        $resource->children = $children;
+        if($children) {
+            $resource->children = $children;
+        }
 
         return $resource;
     }

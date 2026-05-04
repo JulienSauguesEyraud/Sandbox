@@ -47,6 +47,46 @@
             short.style.display = short.style.display === 'none' ? 'inline-block' : 'none';
             full.style.display = full.style.display === 'none' ? 'inline-block' : 'none';
         }
+
+        function showMoreComments(e, id) {
+            fetch('/api/comments/' + id)
+                .then(res => res.json())
+                .then(data => {
+                    data.children.forEach(child => {
+                        e.parentElement.appendChild(showComment(child));
+                    });
+
+                    e.remove();
+                });
+        }
+
+        function showComment(comment) {
+            const div = document.createElement('div');
+            div.className = 'comment-block';
+
+            div.innerHTML = `
+                <div class="comment-short" style="padding-left: 22px;">
+                    ${comment.description.slice(0, 80)}
+                    <span onclick="toggleComment(this)" style="cursor:pointer; color:blue;">
+                        ... [voir plus]
+                    </span>
+                </div>
+                <div class="comment-full" style="display:none; padding-left: 22px;">
+                    ${comment.description}
+                    <span onclick="toggleComment(this)" style="cursor:pointer; color:blue;">
+                        [voir moins]
+                    </span>
+                </div>
+            `;
+
+            if (comment.children) {
+                comment.children.forEach(child => {
+                    div.appendChild(showComment(child));
+                });
+
+            }
+            return div;
+        }
     </script>
 {% endblock %}
 {% block body %}
@@ -57,6 +97,7 @@
         {% for child in comment.children %}
             {% include 'topic/_comment_tree.html.twig' with {
                 comment: child,
+                depth: 0
             } %}
         {% endfor %}
     </div>
